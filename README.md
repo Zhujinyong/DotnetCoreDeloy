@@ -2,7 +2,8 @@ dotnet项目部署方案
 
 一．Windows部署**.net Core 2.0.5**
 ==================================
-
+Windows部署-->Liunx部署--> Linux下docker方式部署--> Jenkins一键构建发布,如下图：
+![](media/view.png)
 1.  首先发布项目文件,点击网站项目右键 发布
 
 ![](media/074e25c30437dbb807b23c569280ccd2.png)
