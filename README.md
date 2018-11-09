@@ -297,7 +297,7 @@ LC_ALL="en_US.UTF-8" -e TZ="Asia/Shanghai" cchr-image
 
 查看容器cchr-container的时间（可以不执行）：docker exec cchr-container date
 
-打开浏览器访问：<http://10.7.11.22:8050/swagger/>
+打开浏览器访问：<http://127.0.0.1:8050/swagger/>
 
 ### 2.5发布更新
 
@@ -318,15 +318,15 @@ docker container rm -f cchr-container
 
 #### 3.1.1搭建私有仓库
 
-10.7.11.22已经部署了私有仓库，其部署步骤如下：
+127.0.0.1已经部署了私有仓库，其部署步骤如下：
 
 编辑文件daemon.json
 
 vim /etc/docker/daemon.json
 
-仓库地址10.7.11.22:5000，内容如下
+仓库地址127.0.0.1:5000，内容如下
 
-内容如下{ "insecure-registries":["10.7.11.22:5000"] }
+内容如下{ "insecure-registries":["127.0.0.1:5000"] }
 
 保存
 
@@ -368,7 +368,7 @@ localhost:5000/ajqh-webapi:v1.0.0
 
 ### 3.2 客户端
 
-用10.69.1.161做测试
+用192.168.1.6做测试
 
 #### 3.2.1编辑daemon.json
 
@@ -376,9 +376,9 @@ localhost:5000/ajqh-webapi:v1.0.0
 
 vim /etc/docker/daemon.json
 
-仓库地址10.7.11.22:5000，内容如下
+仓库地址127.0.0.1:5000，内容如下
 
-{ "insecure-registries":["10.7.11.22:5000"] }
+{ "insecure-registries":["127.0.0.1:5000"] }
 
 保存
 
@@ -393,46 +393,46 @@ systemctl daemon-reload && systemctl restart docker
 **CCHR:**
 
 docker container rm -f cchr-container && docker image rm -f
-10.7.11.22:5000/cchr-webapi
+127.0.0.1:5000/cchr-webapi
 
 **安家趣花：**
 
 docker container rm -f ajqh-container && docker image rm -f
-10.7.11.22:5000/ajqh-webapi
+127.0.0.1:5000/ajqh-webapi
 
 #### 3.2.3从仓库拉镜像并运行容器
 
 **CCHR:**
 
-用镜像10.7.11.22:5000/cchr-
+用镜像127.0.0.1:5000/cchr-
 webapi创建容器，指定容器名称是cchr-container，指定时区（否则用的是美国时间，相差8小时），容器里的8050端口映射到linux主机的8050端口，每次运行失败后自动重启
 
 docker run --name=cchr-container -dp 8050:8050 --restart=always -e
-LC_ALL="en_US.UTF-8" -e TZ="Asia/Shanghai" 10.7.11.22:5000/cchr-webapi
+LC_ALL="en_US.UTF-8" -e TZ="Asia/Shanghai" 127.0.0.1:5000/cchr-webapi
 
 打开浏览器访问：
-[http://10.69.1.161:8050/swagger/](http://10.7.11.22:8050/swagger/)
+[http://192.168.1.6:8050/swagger/](http://127.0.0.1:8050/swagger/)
 
 如果要回滚到某个版本，指定版本即可，如：
 
 docker run --name=cchr-container -dp 8050:8050 --restart=always -e
-LC_ALL="en_US.UTF-8" -e TZ="Asia/Shanghai" 10.7.11.22:5000/cchr-webapi:v1.0.0
+LC_ALL="en_US.UTF-8" -e TZ="Asia/Shanghai" 127.0.0.1:5000/cchr-webapi:v1.0.0
 
 **安家趣花：**
 
-用镜像10.7.11.22:5000/ajqh-
+用镜像127.0.0.1:5000/ajqh-
 webapi创建容器，指定容器名称是ajqh-container，指定时区（否则用的是美国时间，相差8小时），容器里的8070端口映射到linux主机的8070端口，每次运行失败后自动重启
 
 docker run --name=ajqh-container -dp 8070:8070 --restart=always -e
-LC_ALL="en_US.UTF-8" -e TZ="Asia/Shanghai" 10.7.11.22:5000/ajqh-webapi
+LC_ALL="en_US.UTF-8" -e TZ="Asia/Shanghai" 127.0.0.1:5000/ajqh-webapi
 
 打开浏览器访问：
-[http://10.69.1.161:8070/swagger/](%20http://10.69.1.161:8070/swagger/)
+[http://192.168.1.6:8070/swagger/](%20http://192.168.1.6:8070/swagger/)
 
 如果要回滚到某个版本，指定版本即可，如：
 
 docker run --name=ajqh-container -dp 8070:8070 --restart=always -e
-LC_ALL="en_US.UTF-8" -e TZ="Asia/Shanghai" 10.7.11.22:5000/ajqh-webapi:v1.0.0
+LC_ALL="en_US.UTF-8" -e TZ="Asia/Shanghai" 127.0.0.1:5000/ajqh-webapi:v1.0.0
 
 4.附录-常用命令
 ---------------
@@ -481,22 +481,22 @@ Registry私有仓库，应用服务器从仓库拉取镜像并运行，发挥jen
 
 Jenkins构建CCHRWebApi集群化部署
 
-Jenkins从svn（https://tjs-svn.centaline.com.cn:8443/svn/cchr/trunk/CCHRWebApi）上拉取CCHRWebApi项目源代码到linux发布器（如10.7.11.22），在linux发布器上编译发布到本地文件夹，打包成镜像，发布到Registry（http://10.7.11.22:5000），在应用服务器（如10.69.1.161）拉取镜像并运行。流程图如下：
+Jenkins从svn（https://192.168.1.10/svn/cchr/trunk/CCHRWebApi）上拉取CCHRWebApi项目源代码到linux发布器（如127.0.0.1），在linux发布器上编译发布到本地文件夹，打包成镜像，发布到Registry（http://127.0.0.1:5000），在应用服务器（如192.168.1.6）拉取镜像并运行。流程图如下：
 
 4.3 环境要求
 ------------
 
 | 服务器         | IP          | 要求                             |
 |----------------|-------------|----------------------------------|
-| Jenkins服务器  | 10.7.19.22  | 安装jenkins                      |
-| 发布器         | 10.7.11.22  | 安装dotnet core docker ,jdk1.8.0 |
-| 私有仓库服务器 | 10.7.11.22  | 安装docker Registry              |
-| 应用服务器     | 10.69.1.161 | docker                           |
+| Jenkins服务器  | 192.168.1.8  | 安装jenkins                      |
+| 发布器         | 127.0.0.1  | 安装dotnet core docker ,jdk1.8.0 |
+| 私有仓库服务器 | 127.0.0.1  | 安装docker Registry              |
+| 应用服务器     | 192.168.1.6 | docker                           |
 
 4.4具体实现
 -----------
 
-参考http://10.7.19.22:8888/jenkins/job/CCHRWebApi-Test/configure
+参考http://192.168.1.8:8888/jenkins/job/CCHRWebApi-Test/configure
 
 #### 4.4.1添加发布器节点
 
@@ -514,11 +514,11 @@ Jenkins上添加发布器，一般选择复制现有节点，再修改。
 
 ![](media/db997a18f7bfec59e07f6d9d632e7c6e.png)
 
-用xftp6工具上传agent.jar和slave-agent.jnlp到10.7.11.22目录/root/jenkins/environment下
+用xftp6工具上传agent.jar和slave-agent.jnlp到127.0.0.1目录/root/jenkins/environment下
 
 ![](media/08d73eea3ffaa2d1615a6ae7bcc13929.png)
 
-10.7.11.22上安装java jdk1.8.0
+127.0.0.1上安装java jdk1.8.0
 
 yum install java-1.8.0-openjdk
 
@@ -527,10 +527,10 @@ yum install java-1.8.0-openjdk
 cd /root/jenkins/environment
 
 java -jar agent.jar -jnlpUrl
-http://10.7.19.22:8888/jenkins/computer/linuxBuildServer/slave-agent.jnlp
+http://192.168.1.8:8888/jenkins/computer/linuxBuildServer/slave-agent.jnlp
 -workDir "/root/jenkins"
 
-回到jenkins页面看到10.7.11.22已经连接成功
+回到jenkins页面看到127.0.0.1已经连接成功
 
 ![](media/78b11e7fe1513dee1425a2f531881e88.png)
 
@@ -548,7 +548,7 @@ http://10.7.19.22:8888/jenkins/computer/linuxBuildServer/slave-agent.jnlp
 
 ![](media/ec3be59309d415a1fa0b1c7df881abfa.png)
 
-项目地址<https://tjs-svn.centaline.com.cn:8443/svn/cchr/trunk/CCHRWebApi>，通过svn下载源代码到发布器（10.7.11.22）上，对应目录/root/jenkins/workspace/CCHRWebApi/Centa.CCHR.WebApi
+项目地址<https://192.168.1.10/svn/cchr/trunk/CCHRWebApi>，通过svn下载源代码到发布器（127.0.0.1）上，对应目录/root/jenkins/workspace/CCHRWebApi/Centa.CCHR.WebApi
 
 #### 4.4.5设置版本号
 
@@ -599,7 +599,7 @@ localhost:5000/cchr-webapi:\${BUILD_VERSION}
 进入项目目录，发布到out目录，无缓存方式构建镜像，打标签（版本），推送到docker
 Registry。
 
-接下来应用服务器就可以拉取镜像，运行了，以10.69.1.161做测试应用服务器为例
+接下来应用服务器就可以拉取镜像，运行了，以192.168.1.6做测试应用服务器为例
 
 #### 4.4.7添加应用服务器SSH
 
@@ -616,11 +616,11 @@ Registry。
 命令如下：
 
 docker container rm -f cchr-container && docker image rm -f
-10.7.11.22:5000/cchr-webapi
+127.0.0.1:5000/cchr-webapi
 
 docker run -e ASPNETCORE_ENVIRONMENT=Test --name=cchr-container -dp 8050:8050
 --restart=always -e LC_ALL="en_US.UTF-8" -e TZ="Asia/Shanghai"
-10.7.11.22:5000/cchr-webapi
+127.0.0.1:5000/cchr-webapi
 
 说明：先移除容器和镜像，再从仓库里拉取最新的容器并运行
 
